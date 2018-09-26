@@ -43,39 +43,46 @@ namespace EindopdrachtFunctions
 
             }
 
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("AzureWebJobsStorage") + ";EndpointSuffix=core.windows.net");
-
-            CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference("blobcontainer");
-            await cloudBlobContainer.CreateIfNotExistsAsync();
-
-            // create sas uri
-            string policyName = "newPolicy";
-            CreateSharedAccessPolicy(cloudBlobClient, cloudBlobContainer, policyName);
-            string sasUri = GetContainerSasUri(cloudBlobContainer, policyName);
-            log.Info("Sas uri created");
-
-            // create queue
-            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-
-            CloudQueue queue = queueClient.GetQueueReference("queue");
-            queue.CreateIfNotExists();
-
-            log.Info("Cloud queue created");
-
-            QueueMessage queueMessage = new QueueMessage
+            if (placeName != null && placeName != "")
             {
-                PlaceName = placeName,
-                ImageName = $"{Guid.NewGuid().ToString()}.png",
-                SasUri = sasUri
-            };
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("AzureWebJobsStorage") + ";EndpointSuffix=core.windows.net");
 
-            string message = JsonConvert.SerializeObject(queueMessage);
-            queue.AddMessage(new CloudQueueMessage(message));
+                CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
+                CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference("blobcontainer");
+                await cloudBlobContainer.CreateIfNotExistsAsync();
 
-            log.Info("Message placed on queue");
+                // create sas uri
+                string policyName = "newPolicy";
+                CreateSharedAccessPolicy(cloudBlobClient, cloudBlobContainer, policyName);
+                string sasUri = GetContainerSasUri(cloudBlobContainer, policyName);
+                log.Info("Sas uri created");
 
-            return req.CreateResponse(HttpStatusCode.OK, queueMessage);
+                // create queue
+                CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+
+                CloudQueue queue = queueClient.GetQueueReference("queue");
+                queue.CreateIfNotExists();
+
+                log.Info("Cloud queue created");
+
+                QueueMessage queueMessage = new QueueMessage
+                {
+                    PlaceName = placeName,
+                    ImageName = $"{Guid.NewGuid().ToString()}.png",
+                    SasUri = sasUri
+                };
+
+                string message = JsonConvert.SerializeObject(queueMessage);
+                queue.AddMessage(new CloudQueueMessage(message));
+
+                log.Info("Message placed on queue");
+
+                return req.CreateResponse(HttpStatusCode.OK, queueMessage);
+            }
+            else
+            {
+                return req.CreateResponse(HttpStatusCode.NotFound, "Place name not found.");
+            }
         }
 
         /// <summary>

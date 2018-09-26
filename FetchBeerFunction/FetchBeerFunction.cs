@@ -16,7 +16,7 @@ namespace FetchBeerFunction
     /// <summary>
     /// Http trigger for fetching finished beer rapport.
     /// </summary>
-    public static class Function1
+    public static class FetchBeerFunction
     {
         /// <summary>
         /// Method for fetching beer rapport.
@@ -38,7 +38,7 @@ namespace FetchBeerFunction
                 .FirstOrDefault(q => string.Compare(q.Key, "sasUri", true) == 0)
                 .Value;
 
-            if (imageName == null)
+            if (imageName == null || sasUri == null)
             {
                 // Get request body
                 dynamic data = await req.Content.ReadAsAsync<object>();
@@ -46,7 +46,7 @@ namespace FetchBeerFunction
                 sasUri = data?.sasUr;
             }
 
-            if (imageName != null & sasUri != null)
+            if (imageName != null && sasUri != null)
             {
                 if (!imageName.EndsWith(".png"))
                 {
@@ -86,7 +86,7 @@ namespace FetchBeerFunction
             }
             else
             {
-                log.Info("No image name or sas");
+                log.Info("No image name or sas found");
                 return req.CreateResponse(HttpStatusCode.NotFound, "No image name or sas found");
             }
         }
@@ -96,7 +96,7 @@ namespace FetchBeerFunction
         /// </summary>
         /// <param name="url">The url.</param>
         /// <returns>A memory stream.</returns>
-        public async static Task<MemoryStream> GetMemoryStream(string url)
+        private async static Task<MemoryStream> GetMemoryStream(string url)
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();

@@ -42,7 +42,7 @@ namespace QueueTriggerFunction
 
                 if (output != null)
                 {
-                    log.Info("Got weather info");
+                    log.Info("Weather info obtained");
 
                     // deserialize object and get values
                     dynamic results = JsonConvert.DeserializeObject<dynamic>(output);
@@ -56,19 +56,19 @@ namespace QueueTriggerFunction
                     string lon = results.coord.lon;
                     string lat = results.coord.lat;
 
-                    // generate beer advice
+                    // create beer advice
                     string beerAdvice = CreateBeerAdvice(temp, windSpeed);
 
                     // get map image
-                    string mapUri = string.Format("https://atlas.microsoft.com/map/static/png?subscription-key=" + Environment.GetEnvironmentVariable("MapKey") + "&api-version=1.0&center={0},{1}&zoom=12&height=512&width=512&language=nl-NL&format=png", lon, lat);
+                    string mapUrl = string.Format("https://atlas.microsoft.com/map/static/png?subscription-key=" + Environment.GetEnvironmentVariable("MapKey") + "&api-version=1.0&center={0},{1}&zoom=12&height=512&width=512&language=nl-NL&format=png", lon, lat);
 
-                    Task<MemoryStream> streamTask = GetMemoryStreamAsync(mapUri);
-                    MemoryStream stream = streamTask.Result;
-
-                    log.Info("Map obtained");
+                    Task<MemoryStream> streamTask = GetMemoryStreamAsync(mapUrl);
+                    MemoryStream stream = streamTask.Result;            
 
                     if (stream != null)
                     {
+                        log.Info("Map obtained");
+
                         // add text to image
                         ImageHelper helper = new ImageHelper();
                         MemoryStream modifiedStream = helper.AddTextToImage(stream, beerAdvice, temp.ToString(), weatherDescription, windSpeed.ToString());
@@ -130,7 +130,7 @@ namespace QueueTriggerFunction
         /// </summary>
         /// <param name="url">The url.</param>
         /// <returns>A string.</returns>
-        public async static Task<string> GetStringAsync(string url)
+        private async static Task<string> GetStringAsync(string url)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
@@ -155,7 +155,7 @@ namespace QueueTriggerFunction
         /// </summary>
         /// <param name="url">The url.</param>
         /// <returns>A memory stream.</returns>
-        public async static Task<MemoryStream> GetMemoryStreamAsync(string url)
+        private async static Task<MemoryStream> GetMemoryStreamAsync(string url)
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
@@ -173,11 +173,11 @@ namespace QueueTriggerFunction
         /// </summary>
         /// <param name="temp">The temperature.</param>
         /// <param name="windSpeed">The windspeed.</param>
-        /// <returns>A beer advice.</returns>
-        public static string CreateBeerAdvice(double temp, double windSpeed)
+        /// <returns>Beer advice.</returns>
+        private static string CreateBeerAdvice(double temp, double windSpeed)
         {
             string beerAdvice;
-            if (temp > 18 & temp < 25)
+            if (temp >= 18 & temp <= 25)
             {
                 if (windSpeed > 16)
                 {
