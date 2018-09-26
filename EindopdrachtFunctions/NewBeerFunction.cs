@@ -43,7 +43,7 @@ namespace EindopdrachtFunctions
 
             }
 
-            if (placeName != null && placeName != "")
+            if (!string.IsNullOrEmpty(placeName))
             {
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("AzureWebJobsStorage") + ";EndpointSuffix=core.windows.net");
 
@@ -59,7 +59,6 @@ namespace EindopdrachtFunctions
 
                 // create queue
                 CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-
                 CloudQueue queue = queueClient.GetQueueReference("queue");
                 queue.CreateIfNotExists();
 

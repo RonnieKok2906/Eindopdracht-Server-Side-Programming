@@ -34,7 +34,7 @@ namespace QueueTriggerFunction
 
             log.Info("Deserialized object");
 
-            if (queueItem.PlaceName != null)
+            if (queueItem != null)
             {
                 // get weather info
                 string weatherUrl = string.Format("https://api.openweathermap.org/data/2.5/weather?q={0},nl&appid=" + Environment.GetEnvironmentVariable("WeatherKey") + "&units=metric", queueItem.PlaceName);
@@ -74,9 +74,6 @@ namespace QueueTriggerFunction
                         MemoryStream modifiedStream = helper.AddTextToImage(stream, beerAdvice, temp.ToString(), weatherDescription, windSpeed.ToString());
 
                         // add memorystream to blob storage
-                        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("AzureWebJobsStorage") + ";EndpointSuffix=core.windows.net");
-                        CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
-
                         CloudBlobContainer cloudBlobContainer = new CloudBlobContainer(new Uri(queueItem.SasUri));
 
                         Task<bool> succes = SendBlobAsync(cloudBlobContainer, modifiedStream, queueItem.ImageName);

@@ -46,14 +46,12 @@ namespace FetchBeerFunction
                 sasUri = data?.sasUr;
             }
 
-            if (imageName != null && sasUri != null)
+            if (!string.IsNullOrEmpty(imageName) && !string.IsNullOrEmpty(sasUri))
             {
                 if (!imageName.EndsWith(".png"))
                 {
                     imageName = imageName + ".png";
                 }
-
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("AzureWebJobsStorage") + ";EndpointSuffix=core.windows.net");
 
                 CloudBlobContainer cloudBlobContainer = new CloudBlobContainer(new Uri(sasUri));
 
