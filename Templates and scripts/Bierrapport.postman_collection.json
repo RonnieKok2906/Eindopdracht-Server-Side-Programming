@@ -1,0 +1,94 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Bierrapport",
+		"_postman_id": "9dd01ae2-f803-b9e4-5ec1-345f97f03673",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://newbeerfunction20180921074435.azurewebsites.net/api/CreateRapport/?placeName=Haarlem",
+			"request": {
+				"url": {
+					"raw": "https://newbeerfunction20180921074435.azurewebsites.net/api/CreateRapport/?placeName=Haarlem",
+					"protocol": "https",
+					"host": [
+						"newbeerfunction20180921074435",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"CreateRapport",
+						""
+					],
+					"query": [
+						{
+							"key": "placeName",
+							"value": "Haarlem",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-functions-key",
+						"value": "cOAqMHFUiqR8sALMKLfm0aYWHu7aLFCBlpVpdfrCfVRKAxNDK1GE9g==",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "https://fetchbeerfunction20180923054451.azurewebsites.net/api/FetchRapport?imageName=3ff59d75-393d-4320-8421-84020ee492aa",
+			"request": {
+				"url": {
+					"raw": "https://fetchbeerfunction20180923054451.azurewebsites.net/api/FetchRapport?imageName=fec0d917-9298-4678-b1ef-cab2cb194bd6.png&sasUri=https://eindopdrachtstorage.blob.core.windows.net/blobcontainer?sv=2015-12-11%26sr=c%26sig=%2FZNtmcy4FwADII7uDVlgGVJtGc3pD7C40hI2vp1YoZw%3D%26se=2018-09-25T14%3A37%3A19Z%26sp=wl",
+					"protocol": "https",
+					"host": [
+						"fetchbeerfunction20180923054451",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"FetchRapport"
+					],
+					"query": [
+						{
+							"key": "imageName",
+							"value": "fec0d917-9298-4678-b1ef-cab2cb194bd6.png",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "sasUri",
+							"value": "https://eindopdrachtstorage.blob.core.windows.net/blobcontainer?sv=2015-12-11%26sr=c%26sig=%2FZNtmcy4FwADII7uDVlgGVJtGc3pD7C40hI2vp1YoZw%3D%26se=2018-09-25T14%3A37%3A19Z%26sp=wl",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-functions-key",
+						"value": "HDF4adgGu33pVdrPR8Kv0yfVN3fxnfp9h2cdTe2N3E16kaCYaaj1ew==",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,11 @@
+az group deployment create \
+  --name Deployment \
+  --resource-group EindopdrachtGroep \
+  template-uri https://eindopdrachtstorage.blob.core.windows.net/templates/template.json \
+  --parameters storageAccountType=Standard_GRS
+  --rollback-on-error
+
+
+az group deployment validate \
+  --resource-group EindopdrachtGroep \
+  --template-uri https://eindopdrachtstorage.blob.core.windows.net/templates/ARMtemplate.json
